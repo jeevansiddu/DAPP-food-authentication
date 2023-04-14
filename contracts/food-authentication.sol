@@ -55,13 +55,17 @@ contract food_authentication is DateTime {
         }
     }
 
+    // 1681293780
+    //1681293708
     function setExpirydate(
         uint256 id,
         uint16 year,
         uint8 month,
-        uint8 day
+        uint8 day,
+        uint8 hour,
+        uint8 minute
     ) public onlyowner {
-        uint256 k = toTimestamp(year, month, day);
+        uint256 k = toTimestamp(year, month, day, hour, minute) - 19800;
         foodidtoitem[id].expirytimestamp = k;
     }
 
@@ -108,6 +112,10 @@ contract food_authentication is DateTime {
         return foodidtoitem[id].travel_history;
     }
 
+    function getExpiryTimeStamp(uint id) public view returns (uint) {
+        return foodidtoitem[id].expirytimestamp;
+    }
+
     function getManufactureDate(uint id) public view returns (string memory) {
         return foodidtoitem[id].manufacture_date;
     }
@@ -130,6 +138,10 @@ contract food_authentication is DateTime {
         return foodidtoitem[id].iscomsumed;
     }
 
+    function getCurrentTimeStamp() public view returns (uint256) {
+        return block.timestamp;
+    }
+
     modifier onlyowner() {
         // require(msg.sender==i_owner,"Not the right person");
         if (msg.sender != i_owner) {
@@ -137,4 +149,8 @@ contract food_authentication is DateTime {
         }
         _;
     }
+
+    receive() external payable {}
+
+    fallback() external payable {}
 }
